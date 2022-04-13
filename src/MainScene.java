@@ -117,26 +117,6 @@ public class MainScene extends JPanel {
                 }
             }
         }).start();
-
-//        new Thread(() -> {
-//            this.setFocusable(true);
-//            this.requestFocus();
-//
-//            while (true) {
-//                if (!this.bird.isAlive()) {
-//                    if (this.endGameWindow.isRestart()){
-//                        restart();
-//                    }
-//                    repaint();
-//                    try {
-//                        Thread.sleep(1);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
-
     }
 
     public void restart (){
