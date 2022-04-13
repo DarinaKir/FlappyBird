@@ -22,6 +22,8 @@ public abstract class Shape {
         return x;
     }
 
+    protected void sety(int y) {this.y = y;};
+
     protected int getY() {
         return y;
     }

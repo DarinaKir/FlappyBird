@@ -48,13 +48,13 @@ public class MainScene extends JPanel {
         }
     }
 
-    private void mainGameLoop() {
-        System.out.println("loop");
+    private void obstacleListLoop (){
         new Thread(() -> {
             this.setFocusable(true);
             this.requestFocus();
 
             while (true) {
+
                 if (this.bird.isAlive()) {
                     this.obstacles.add(new Obstacle());
                     if (this.obstacles.getFirst().end()) {
@@ -70,13 +70,17 @@ public class MainScene extends JPanel {
                 }
             }
         }).start();
+    }
+
+    private void mainGameLoop() {
+
+        obstacleListLoop();
 
         new Thread(() -> {
             this.setFocusable(true);
             this.requestFocus();
             Movement movement = new Movement(this.bird);
             this.addKeyListener(movement);
-
             while (true) {
                 this.bird.moveDown();
                 if (!this.obstacles.isEmpty()) {
@@ -121,9 +125,9 @@ public class MainScene extends JPanel {
 
     public void restart (){
         this.remove(this.endGameWindow);
-        this.bird = new Bird(Color.YELLOW);
+        this.bird.restart();
         this.passedCounter = 0;
         this.score.setText(""+this.passedCounter);
-        this.obstacles = new LinkedList<>();
+        this.obstacles.clear();
     }
 }

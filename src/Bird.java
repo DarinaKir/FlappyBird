@@ -20,7 +20,7 @@ public class Bird {
         this.body = new Oval(X_HEAD, Y_HEAD, BODY_WIDTH, BODY_HEIGHT,color);
         this.wing = new Oval(X_HEAD - (BODY_WIDTH/4), Y_HEAD + (BODY_HEIGHT / 3), BODY_WIDTH - (BODY_WIDTH/5), (BODY_HEIGHT / 2),Color.GRAY);
         this.eye = new Oval(X_HEAD + (BODY_WIDTH / 2), Y_HEAD, BODY_WIDTH / 2, BODY_WIDTH / 2,Color.WHITE);
-        this.pupil = new Oval((X_HEAD + (BODY_WIDTH / 2) + (BODY_WIDTH / 4)), Y_HEAD+(BODY_WIDTH / 8) , BODY_WIDTH / 5, BODY_HEIGHT / 3, Color.BLACK);
+        this.pupil = new Oval((X_HEAD + (BODY_WIDTH / 2) + (BODY_WIDTH / 4)), Y_HEAD+(BODY_HEIGHT / 8) , BODY_WIDTH / 5, BODY_HEIGHT / 3, Color.BLACK);
         this.upperLip = new Oval(X_HEAD + (BODY_WIDTH / 2) + (BODY_WIDTH / 4), Y_HEAD+(2*BODY_HEIGHT/5), BODY_WIDTH / 2, BODY_HEIGHT / 4, Color.PINK);
         this.lowerLip = new Oval(X_HEAD + (BODY_WIDTH / 2) + (BODY_WIDTH / 4), Y_HEAD+(3*BODY_HEIGHT/5), BODY_WIDTH / 2, BODY_HEIGHT / 4, Color.PINK);
 
@@ -108,5 +108,15 @@ public class Bird {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    public void restart (){
+        this.body.sety(Y_HEAD);
+        this.wing.sety(Y_HEAD + (BODY_HEIGHT / 3));
+        this.upperLip.sety(Y_HEAD+(2*BODY_HEIGHT/5));
+        this.lowerLip.sety(Y_HEAD+(3*BODY_HEIGHT/5));
+        this.eye.sety(Y_HEAD);
+        this.pupil.sety(Y_HEAD+(BODY_HEIGHT / 8));
+        this.alive = true;
     }
 }
