@@ -19,7 +19,7 @@ public class Movement implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_SPACE) {
+        if (keyCode == KeyEvent.VK_SPACE && this.bird.isAlive()) {
             this.start = true;
             this.bird.moveUp();
         }

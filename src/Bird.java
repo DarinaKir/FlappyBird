@@ -34,14 +34,14 @@ public class Bird {
     }
 
     public void paint (Graphics graphics){
-        if (this.alive){
+//        if (this.alive){
             this.body.paint(graphics);
             this.lowerLip.paint(graphics);
             this.upperLip.paint(graphics);
             this.eye.paint(graphics);
             this.pupil.paint(graphics);
             this.wing.paint(graphics);
-        }
+//        }
     }
 
     public void moveUp() {
@@ -59,8 +59,10 @@ public class Bird {
     }
 
     public void moveDown() {
-        this.body.moveDown();
-        setYBird(this.body.getY());
+        if ((this.body.getY()+BODY_HEIGHT) < (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT)){
+            this.body.moveDown();
+            setYBird(this.body.getY());
+        }
     }
 
     public void kill() {
