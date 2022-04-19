@@ -12,6 +12,4 @@ public class Oval extends Shape {
         graphics.setColor(Color.BLACK);
         graphics.drawOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
-
-
 }

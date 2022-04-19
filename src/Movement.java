@@ -4,9 +4,11 @@ import java.awt.event.KeyListener;
 public class Movement implements KeyListener {
 
     private Bird bird;
+    private boolean start;
 
     public Movement (Bird bird) {
         this.bird = bird;
+        this.start = false;
     }
 
 
@@ -18,6 +20,7 @@ public class Movement implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_SPACE) {
+            this.start = true;
             this.bird.moveUp();
         }
     }
@@ -28,5 +31,13 @@ public class Movement implements KeyListener {
 //        if (keyCode == KeyEvent.VK_SPACE) {
 //            this.bird.moveUp();
 //        }
+    }
+
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
     }
 }

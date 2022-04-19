@@ -22,7 +22,9 @@ public abstract class Shape {
         return x;
     }
 
-    protected void sety(int y) {this.y = y;};
+    protected void setY(int y) {
+        this.y = y;
+    }
 
     protected int getY() {
         return y;
@@ -36,6 +38,10 @@ public abstract class Shape {
         return height;
     }
 
+    protected void setColor(Color color){
+        this.color = color;
+    }
+
     protected Color getColor() {
         return color;
     }
@@ -43,22 +49,12 @@ public abstract class Shape {
     public void moveDown() {
         this.y++;
     }
-    public void moveLeft() {
-        this.x--;
-    }
 
     public void moveUp() {
         this.y--;
+    }
 
-//        new Thread(() -> {
-//            for (int i = 0; i < 40; i++) {
-//                this.y--;
-//                try {
-//                    Thread.sleep(1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+    public void moveLeft() {
+        this.x--;
     }
 }

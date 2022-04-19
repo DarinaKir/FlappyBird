@@ -9,35 +9,52 @@ public class MainScene extends JPanel {
     private Bird bird;
     private LinkedList<Obstacle> obstacles;
     private ImageIcon background;
+
     private int passedCounter;
-    private JLabel score; // ניקוד
     private int playerRecord;
+    private JLabel score;
     private EndGameWindow endGameWindow;
+
+    private boolean start;
+    private Movement movement;
+    private int counterUpDownTime;
+    private JLabel pressToStart;
+
+    public static final int  BIRD_VIBRATION_TIME_LOOP = 20;
 
 
     public MainScene(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
-        this.bird = new Bird(Color.YELLOW);
+        this.start = false;
+        this.bird = new Bird();
+        this.obstacles = new LinkedList<>();
+
+        Font font = new Font("Ariel", Font.BOLD, 50);
+
+        this.counterUpDownTime = 0;
+        this.pressToStart = new JLabel("Press 'Space' To Start");
+        this.pressToStart.setBounds(Window.MAIN_SCENE_WIDTH / 4, Bird.Y_HEAD, 2 * Window.MAIN_SCENE_WIDTH / 3, Window.MAIN_SCENE_HEIGHT / 10);
+        this.pressToStart.setFont(font);
+        this.pressToStart.setForeground(Color.WHITE);
+
         this.playerRecord = 0;
         this.passedCounter = 0;
         this.score = new JLabel();
         this.score.setBounds((Window.MAIN_SCENE_WIDTH/2)-15,5, 50,60);
-        Font scoreFont = new Font("Ariel", Font.BOLD, 50);
-        this.score.setFont(scoreFont);
+        this.score.setFont(font);
         this.score.setText(""+this.passedCounter);
         this.add(this.score);
+
+        this.movement = new Movement(this.bird);
         this.mainGameLoop();
-        this.obstacles = new LinkedList<>();
-        this.endGameWindow = new EndGameWindow();
 
-
+//        this.endGameWindow = new EndGameWindow();
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         this.background = new ImageIcon("background.png");
         this.background.paintIcon(this, g, 0, -50);
-
         this.bird.paint(g);
         try {
             for (Obstacle obstacle : this.obstacles) {
@@ -46,6 +63,17 @@ public class MainScene extends JPanel {
         }catch (ConcurrentModificationException e) {
             e.printStackTrace();
         }
+
+        //למה דווקא כאן ?
+        if (this.endGameWindow != null) {
+            this.endGameWindow.boundarySettings();
+        }
+    }
+
+    private void mainGameLoop() {
+        birdVibrationLoop();
+        obstacleListLoop();
+        moveLoop();
     }
 
     private void obstacleListLoop (){
@@ -54,16 +82,16 @@ public class MainScene extends JPanel {
             this.requestFocus();
 
             while (true) {
-
-                if (this.bird.isAlive()) {
-                    this.obstacles.add(new Obstacle());
-                    if (this.obstacles.getFirst().end()) {
-                        this.obstacles.removeFirst();
-                    }
+                Obstacle obstacle = new Obstacle();
+                if (this.bird.isAlive() && this.start) {
+                    this.obstacles.add(obstacle);
+//                    if (this.obstacles.getFirst().end()) {
+//                        this.obstacles.removeFirst();
+//                    }
                     repaint();
 
                     try {
-                        Thread.sleep(4000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -72,50 +100,25 @@ public class MainScene extends JPanel {
         }).start();
     }
 
-    private void mainGameLoop() {
-
-        obstacleListLoop();
-
+    private void moveLoop(){
         new Thread(() -> {
             this.setFocusable(true);
             this.requestFocus();
-            Movement movement = new Movement(this.bird);
-            this.addKeyListener(movement);
+            this.addKeyListener(this.movement);
             while (true) {
-                this.bird.moveDown();
-                if (!this.obstacles.isEmpty()) {
-                    if (this.obstacles.getFirst().isPassedBird()) {
-                        this.passedCounter++;
-                        this.score.setText("" + this.passedCounter);
-                    }
-                    if (this.bird.getLowerBird() > (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT) || this.bird.getUpperBird() < Window.Y_MAIN_SCENE ||
-                            this.bird.checkCollision(this.obstacles.getFirst())) {
-                        this.bird.kill();
-                        this.score.setText("Game Over");
-                        if (this.playerRecord < this.passedCounter){
-                            this.playerRecord = this.passedCounter;
-                        }
-                        this.endGameWindow.setEndGamePanel(this.passedCounter, this.playerRecord);
-                        this.add(this.endGameWindow);
-                        this.endGameWindow.getRestart().addActionListener((event) -> {
-                            restart();
-                        });
-
-                    }
+                this.start = this.movement.isStart();
+                if (this.start){
+//                    for (int i = 0; i < 3; i++) {
+                        this.bird.moveDown();
+//                    }
+//                    for (int i = 0; i < 4; i++) {
+                        tests();
+                        obstaclesMoveLeft();
+//                    }
+                    repaint();
                 }
-                if (this.bird.isAlive()) {
-                    try {
-                        for (Obstacle obstacle : this.obstacles) {
-                            obstacle.moveLeft();
-                        }
-                    } catch (ConcurrentModificationException e) {
-                        e.printStackTrace();
-                    }
-                }
-                repaint();
-
                 try {
-                    Thread.sleep(9);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -123,11 +126,109 @@ public class MainScene extends JPanel {
         }).start();
     }
 
-    public void restart (){
-        this.remove(this.endGameWindow);
+    private void tests(){
+        if (!this.obstacles.isEmpty()) {
+            if (this.obstacles.getFirst().end()) {
+                this.obstacles.removeFirst();
+            }
+            if (this.obstacles.getFirst().isPassedBird()) {
+                this.passedCounter++;
+                this.score.setText("" + this.passedCounter);
+            }
+            if (this.bird.getLowerBird() > (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT) || this.bird.getUpperBird() < Window.Y_MAIN_SCENE ||
+                    this.bird.checkCollision(this.obstacles.getFirst())) {
+                this.bird.kill();
+                this.score.setText("Game Over");
+                if (this.playerRecord < this.passedCounter){
+                    this.playerRecord = this.passedCounter;
+                }
+                if (this.endGameWindow == null){
+//                    this.endGameWindow.setEndGamePanel(this.passedCounter, this.playerRecord);
+                    this.endGameWindow = new EndGameWindow(this.passedCounter, this.playerRecord);
+                    this.add(this.endGameWindow);
+                    this.endGameWindow.boundarySettings();
+                }else {
+                    this.endGameWindow.getRestartButton().addActionListener((event) -> {
+                        restart();
+                    });
+                }
+            }
+        }
+    }
+
+    private void restart (){
+        if (this.endGameWindow != null) {
+            this.remove(this.endGameWindow);
+//            this.endGameWindow.boundarySettings();
+            this.endGameWindow = null;
+        }
         this.bird.restart();
         this.passedCounter = 0;
         this.score.setText(""+this.passedCounter);
         this.obstacles.clear();
+        this.movement.setStart(false);
+//        this.pressToStart.setBounds(Window.MAIN_SCENE_WIDTH / 4, Bird.Y_HEAD, 2 * Window.MAIN_SCENE_WIDTH / 3, Window.MAIN_SCENE_HEIGHT / 10);
+    }
+
+    private void obstaclesMoveLeft(){
+        if (this.bird.isAlive() && this.start) {
+            try {
+                for (Obstacle obstacle : this.obstacles) {
+                    if (obstacle != null){
+                        obstacle.moveLeft();
+                    }
+                }
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void birdVibrationLoop(){
+        new Thread(() -> {
+            this.setFocusable(true);
+            this.requestFocus();
+
+            boolean isPressVisible = false;
+
+            while (true) {
+                if (!this.start) {
+                    if (counterUpDownTime % 2 == 0) {
+                        this.bird.moveDownSlow();
+                    } else {
+                        this.bird.moveUpSlow();
+                    }
+                    if (!isPressVisible) {
+                        this.add(this.pressToStart);
+                        isPressVisible = true;
+                    }
+                } else if (isPressVisible) {
+                    this.remove(this.pressToStart);
+                    isPressVisible = false;
+                }
+                repaint();
+                try {
+                    Thread.sleep(BIRD_VIBRATION_TIME_LOOP);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        new Thread(() -> {
+            this.setFocusable(true);
+            this.requestFocus();
+
+            while (true) {
+                if (!this.start) {
+                    this.counterUpDownTime ++;
+                }
+                try {
+                    Thread.sleep(BIRD_VIBRATION_TIME_LOOP * 20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

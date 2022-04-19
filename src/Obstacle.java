@@ -11,7 +11,6 @@ public class Obstacle {
     public static final int GROUND_HEIGHT = 104;
 
     public Obstacle () {
-
         Random random = new Random();
         int randomHeight = random.nextInt(Window.WINDOW_HEIGHT - (SPACE_SIZE + MIN_PIPE_HEIGHT*2 + GROUND_HEIGHT) ) + MIN_PIPE_HEIGHT;
         this.upper = new Pipe(START_X,0,randomHeight,true);
@@ -30,7 +29,7 @@ public class Obstacle {
 
     public boolean end () {
         boolean end = false;
-        if (this.upper.getSmallRectangle().getX() < 0) {
+        if (this.upper.getSmallRectangle().getX() < 0 - Pipe.BIG_REC_WIDTH) {
             end = true;
         }
         return end;

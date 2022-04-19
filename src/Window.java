@@ -11,10 +11,6 @@ public class Window extends JFrame {
     public static final int MAIN_SCENE_HEIGHT = 500;
 
 
-    private ImageIcon background;
-    private JLabel label;
-
-
     public static void main(String[] args) {
         Window window = new Window();
     }
@@ -28,10 +24,5 @@ public class Window extends JFrame {
         this.setVisible(true);
         MainScene mainScene = new MainScene(X_MAIN_SCENE,Y_MAIN_SCENE,MAIN_SCENE_WIDTH,MAIN_SCENE_HEIGHT);
         this.add(mainScene);
-
-
-
     }
-
-
 }
