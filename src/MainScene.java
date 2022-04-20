@@ -23,7 +23,7 @@ public class MainScene extends JPanel {
     private boolean isObstaclesListRunning;
 
     public static final int  BIRD_VIBRATION_TIME_LOOP = 20;
-
+    public static  final int MOVE_TIME_LOOP = 5;
 
     public MainScene(int x, int y, int width, int height) {
         this.setBounds(x, y, width, height);
@@ -97,7 +97,7 @@ public class MainScene extends JPanel {
                     repaint();
 
                     try {
-                        Thread.sleep(1500);
+                        Thread.sleep(MOVE_TIME_LOOP * 300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -118,13 +118,13 @@ public class MainScene extends JPanel {
                         this.bird.moveDown();
 //                    }
 //                    for (int i = 0; i < 4; i++) {
-                        tests();
                         obstaclesMoveLeft();
+                        tests();
 //                    }
                     repaint();
                 }
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(MOVE_TIME_LOOP);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -171,7 +171,9 @@ public class MainScene extends JPanel {
         this.bird.restart();
         this.passedCounter = 0;
         this.score.setText(""+this.passedCounter);
-        this.obstacles.clear();
+        if (!this.isObstaclesListRunning){
+            this.obstacles.clear();
+        }
         this.movement.setStart(false);
         this.pressToStart.setBounds(Window.MAIN_SCENE_WIDTH / 4, Bird.Y_HEAD, 2 * Window.MAIN_SCENE_WIDTH / 3, Window.MAIN_SCENE_HEIGHT / 10);
     }

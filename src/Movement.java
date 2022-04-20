@@ -25,7 +25,7 @@ public class Movement implements KeyListener {
                 for (int i = 0; i < 60; i++) {
                     this.bird.moveUp();
                     try {
-                        Thread.sleep(2);
+                        Thread.sleep(MainScene.MOVE_TIME_LOOP/2);
                     } catch (InterruptedException exception) {
                         exception.printStackTrace();
                     }
