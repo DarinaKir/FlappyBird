@@ -5,7 +5,7 @@ public class Obstacle {
     private Pipe upper;
     private Pipe lower;
 
-    public static final int START_X = 1000;
+    public static final int START_X = Window.MAIN_SCENE_WIDTH;
     public static final int SPACE_SIZE = 150;
     public static final int MIN_PIPE_HEIGHT = 50;
     public static final int GROUND_HEIGHT = 104;

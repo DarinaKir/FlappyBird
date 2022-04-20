@@ -21,7 +21,16 @@ public class Movement implements KeyListener {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_SPACE && this.bird.isAlive()) {
             this.start = true;
-            this.bird.moveUp();
+            new Thread(() -> {
+                for (int i = 0; i < 60; i++) {
+                    this.bird.moveUp();
+                    try {
+                        Thread.sleep(2);
+                    } catch (InterruptedException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            }).start();
         }
     }
 

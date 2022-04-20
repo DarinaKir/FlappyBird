@@ -45,24 +45,28 @@ public class Bird {
     }
 
     public void moveUp() {
-        new Thread(() -> {
-            for (int i = 0; i < 60; i++) {
+//        new Thread(() -> {
+//            for (int i = 0; i < 60; i++) {
                 this.body.moveUp();
                 setYBird(this.body.getY());
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//                try {
+//                    Thread.sleep(2);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     public void moveDown() {
-        if ((this.body.getY()+BODY_HEIGHT) < (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT)){
+        if (!isTouchGround()){
             this.body.moveDown();
             setYBird(this.body.getY());
         }
+    }
+
+    public boolean isTouchGround(){
+        return (getLowerBird() >= (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT));
     }
 
     public void kill() {
@@ -70,7 +74,7 @@ public class Bird {
     }
 
     public int getLowerBird() {
-        return (this.body.getY() + this.body.getHeight());
+        return (this.body.getY() + BODY_HEIGHT);
     }
 
     public int getUpperBird() {
@@ -123,23 +127,5 @@ public class Bird {
         this.pupil.setY(y+(BODY_HEIGHT / 8));
         this.upperLip.setY(y+(2*BODY_HEIGHT/5));
         this.lowerLip.setY(y+(3*BODY_HEIGHT/5));
-    }
-
-    public void moveUpSlow() {
-        this.body.moveUp();
-        this.wing.moveUp();
-        this.upperLip.moveUp();
-        this.lowerLip.moveUp();
-        this.eye.moveUp();
-        this.pupil.moveUp();
-    }
-
-    public void moveDownSlow() {
-        this.body.moveDown();
-        this.wing.moveDown();
-        this.upperLip.moveDown();
-        this.lowerLip.moveDown();
-        this.eye.moveDown();
-        this.pupil.moveDown();
     }
 }

@@ -20,7 +20,7 @@ public class MainScene extends JPanel {
     private int counterUpDownTime;
     private JLabel pressToStart;
 
-    private boolean isObstaclesListPainting;
+    private boolean isObstaclesListRunning;
 
     public static final int  BIRD_VIBRATION_TIME_LOOP = 20;
 
@@ -30,7 +30,7 @@ public class MainScene extends JPanel {
         this.start = false;
         this.bird = new Bird();
         this.obstacles = new LinkedList<>();
-        this.isObstaclesListPainting = true;
+        this.isObstaclesListRunning = false;
 
         Font font = new Font("Ariel", Font.BOLD, 50);
 
@@ -59,11 +59,11 @@ public class MainScene extends JPanel {
         this.background = new ImageIcon("background.png");
         this.background.paintIcon(this, g, 0, -50);
         try {
-            this.isObstaclesListPainting = false;
+            this.isObstaclesListRunning = true;
             for (Obstacle obstacle : this.obstacles) {
                 obstacle.paint(g);
             }
-            this.isObstaclesListPainting = true;
+            this.isObstaclesListRunning = false;
         }catch (ConcurrentModificationException e) {
             e.printStackTrace();
         }
@@ -89,7 +89,7 @@ public class MainScene extends JPanel {
 
             while (true) {
                 Obstacle obstacle = new Obstacle();
-                if (this.bird.isAlive() && this.start && this.isObstaclesListPainting) {
+                if (this.bird.isAlive() && this.start && !this.isObstaclesListRunning) {
                     this.obstacles.add(obstacle);
 //                    if (this.obstacles.getFirst().end()) {
 //                        this.obstacles.removeFirst();
@@ -134,14 +134,14 @@ public class MainScene extends JPanel {
 
     private void tests(){
         if (!this.obstacles.isEmpty()) {
-            if (this.obstacles.getFirst().end() && this.isObstaclesListPainting) {
+            if (this.obstacles.getFirst().end() && !this.isObstaclesListRunning) {
                 this.obstacles.removeFirst();
             }
             if (this.obstacles.getFirst().isPassedBird()) {
                 this.passedCounter++;
                 this.score.setText("" + this.passedCounter);
             }
-            if (this.bird.getLowerBird() >= (Window.MAIN_SCENE_HEIGHT - Obstacle.GROUND_HEIGHT) || this.bird.getUpperBird() < Window.Y_MAIN_SCENE ||
+            if (this.bird.isTouchGround() || this.bird.getUpperBird() <= Window.Y_MAIN_SCENE ||
                     this.bird.checkCollision(this.obstacles.getFirst())) {
                 this.bird.kill();
                 this.score.setText("Game Over");
@@ -179,11 +179,13 @@ public class MainScene extends JPanel {
     private void obstaclesMoveLeft(){
         if (this.bird.isAlive() && this.start) {
             try {
+                this.isObstaclesListRunning = true;
                 for (Obstacle obstacle : this.obstacles) {
                     if (obstacle != null){
                         obstacle.moveLeft();
                     }
                 }
+                this.isObstaclesListRunning = false;
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
             }
@@ -200,9 +202,9 @@ public class MainScene extends JPanel {
             while (true) {
                 if (!this.start) {
                     if (counterUpDownTime % 2 == 0) {
-                        this.bird.moveDownSlow();
+                        this.bird.moveDown();
                     } else {
-                        this.bird.moveUpSlow();
+                        this.bird.moveUp();
                     }
                     if (!isPressVisible) {
                         this.add(this.pressToStart);
