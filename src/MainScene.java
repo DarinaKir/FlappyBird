@@ -74,20 +74,17 @@ public class MainScene extends JPanel {
         super.paintComponent(g);
         this.background = new ImageIcon("background.png");
         this.background.paintIcon(this, g, BACKGROUND_X, BACKGROUND_Y);
+        this.isObstaclesListRunning = true;
         try {
-
-            if (!this.isObstaclesListRunning){
-                this.isObstaclesListRunning = true;
-                for (Obstacle obstacle : this.obstacles) {
-                    if (obstacle != null){
-                        obstacle.paint(g);
-                    }
+            for (Obstacle obstacle : this.obstacles) {
+                if (obstacle != null){
+                    obstacle.paint(g);
                 }
-                this.isObstaclesListRunning = false;
             }
         }catch (ConcurrentModificationException e) {
             e.printStackTrace();
         }
+        this.isObstaclesListRunning = false;
 
         this.bird.paint(g);
 
@@ -207,19 +204,17 @@ public class MainScene extends JPanel {
 
     private void obstaclesMoveLeft(){
         if (this.bird.isAlive() && this.start) {
+            this.isObstaclesListRunning = true;
             try {
-                if (!this.isObstaclesListRunning){
-                    this.isObstaclesListRunning = true;
-                    for (Obstacle obstacle : this.obstacles) {
-                        if (obstacle != null){
-                            obstacle.moveLeft();
-                        }
+                for (Obstacle obstacle : this.obstacles) {
+                    if (obstacle != null){
+                        obstacle.moveLeft();
                     }
-                    this.isObstaclesListRunning = false;
                 }
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
             }
+            this.isObstaclesListRunning = false;
         }
     }
 
