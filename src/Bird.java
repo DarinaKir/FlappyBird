@@ -34,28 +34,17 @@ public class Bird {
     }
 
     public void paint (Graphics graphics){
-//        if (this.alive){
-            this.body.paint(graphics);
-            this.lowerLip.paint(graphics);
-            this.upperLip.paint(graphics);
-            this.eye.paint(graphics);
-            this.pupil.paint(graphics);
-            this.wing.paint(graphics);
-//        }
+        this.body.paint(graphics);
+        this.lowerLip.paint(graphics);
+        this.upperLip.paint(graphics);
+        this.eye.paint(graphics);
+        this.pupil.paint(graphics);
+        this.wing.paint(graphics);
     }
 
     public void moveUp() {
-//        new Thread(() -> {
-//            for (int i = 0; i < 60; i++) {
-                this.body.moveUp();
-                setYBird(this.body.getY());
-//                try {
-//                    Thread.sleep(2);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
+        this.body.moveUp();
+        setYBird(this.body.getY());
     }
 
     public void moveDown() {
@@ -121,7 +110,6 @@ public class Bird {
     }
 
     private void setYBird(int y){
-//        this.body.setY(y);
         this.wing.setY(y + (BODY_HEIGHT / 3));
         this.eye.setY(y);
         this.pupil.setY(y+(BODY_HEIGHT / 8));

@@ -10,11 +10,13 @@ public class Pipe {
 
     public Pipe(int x, int y, int height, boolean isSmallDown) {
         this.bigRectangle = new Rectangle(x, y, BIG_REC_WIDTH, height, Color.GREEN);
+        int ySmallRectangle;
         if (isSmallDown) {
-            this.smallRectangle = new Rectangle(x - (SMALL_REC_HEIGHT / 4), y + height, BIG_REC_WIDTH + (SMALL_REC_HEIGHT / 2), SMALL_REC_HEIGHT, Color.green);
+            ySmallRectangle = y + height;
         } else {
-            this.smallRectangle = new Rectangle(x - (SMALL_REC_HEIGHT / 4), y - SMALL_REC_HEIGHT, BIG_REC_WIDTH + (SMALL_REC_HEIGHT / 2), SMALL_REC_HEIGHT, Color.green);
+            ySmallRectangle = y - SMALL_REC_HEIGHT;
         }
+        this.smallRectangle = new Rectangle(x - (SMALL_REC_HEIGHT / 4), ySmallRectangle, BIG_REC_WIDTH + (SMALL_REC_HEIGHT / 2), SMALL_REC_HEIGHT, Color.green);
     }
 
     public void paint(Graphics graphics) {
