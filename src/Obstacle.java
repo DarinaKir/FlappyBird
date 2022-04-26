@@ -29,7 +29,7 @@ public class Obstacle {
 
     public boolean end () {
         boolean end = false;
-        if (this.upper.getSmallRectangle().getX() < 0 - Pipe.BIG_REC_WIDTH) {
+        if (this.upper.getSmallRectangle().getX() < - Pipe.BIG_REC_WIDTH) {
             end = true;
         }
         return end;

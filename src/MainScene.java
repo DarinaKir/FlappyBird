@@ -29,6 +29,11 @@ public class MainScene extends JPanel {
     private Music music;
     private boolean songActivated;
 
+    public static final int FONT_SIZE = 50;
+    public static final int SCORE_LABEL_Y = 5;
+    public static final int SCORE_LABEL_WIDTH = 50;
+    public static final int SCORE_LABEL_HEIGHT = 60;
+
     public static final int BACKGROUND_X = 0;
     public static final int BACKGROUND_Y = -50;
 
@@ -42,7 +47,7 @@ public class MainScene extends JPanel {
         this.obstacles = new LinkedList<>();
         this.isObstaclesListRunning = false;
 
-        Font font = new Font("Ariel", Font.BOLD, 50);
+        Font font = new Font("Ariel", Font.BOLD, FONT_SIZE);
 
         this.counterUpDownTime = 0;
         this.pressToStart = new JLabel("Press 'Space' To Start");
@@ -53,7 +58,7 @@ public class MainScene extends JPanel {
         this.playerRecord = 0;
         this.passedCounter = 0;
         this.score = new JLabel();
-        this.score.setBounds((Window.MAIN_SCENE_WIDTH/2)-15,5, 50,60);
+        this.score.setBounds((Window.MAIN_SCENE_WIDTH/2)-15,SCORE_LABEL_Y, SCORE_LABEL_WIDTH,SCORE_LABEL_HEIGHT);
         this.score.setFont(font);
         this.score.setText(""+this.passedCounter);
         this.add(this.score);
@@ -101,9 +106,6 @@ public class MainScene extends JPanel {
 
     private void obstacleListLoop (){
         new Thread(() -> {
-            this.setFocusable(true);
-            this.requestFocus();
-
             while (true) {
                 Obstacle obstacle = new Obstacle();
                 if (this.start && this.bird.isAlive() && !this.isObstaclesListRunning) {
@@ -129,7 +131,7 @@ public class MainScene extends JPanel {
                 if (this.start){
                     this.bird.moveDown();
                     obstaclesMoveLeft();
-                    tests();
+                    inspections();
                     repaint();
                 }
                 try {
@@ -141,7 +143,7 @@ public class MainScene extends JPanel {
         }).start();
     }
 
-    private void tests(){
+    private void inspections(){
         if (!this.obstacles.isEmpty()) {
             if (this.obstacles.getFirst().end() && !this.isObstaclesListRunning) {
                 this.obstacles.removeFirst();
